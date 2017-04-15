@@ -1,0 +1,956 @@
+I0415 15:33:24.373775     1 upgrade_proto.cpp:1082] Attempting to upgrade input file specified using deprecated 'solver_type' field (enum)': cifar10_mlp_solver_simple3.prototxt
+I0415 15:33:24.374356     1 upgrade_proto.cpp:1089] Successfully upgraded file specified using deprecated 'solver_type' field (enum) to 'type' field (string).
+W0415 15:33:24.374368     1 upgrade_proto.cpp:1091] Note that future Caffe releases will only support 'type' field (string) for a solver's type.
+I0415 15:33:24.374611     1 caffe.cpp:211] Use CPU.
+I0415 15:33:24.374989     1 solver.cpp:44] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 1000
+base_lr: 0.0001
+display: 1000
+max_iter: 25000
+lr_policy: "step"
+gamma: 0.1
+momentum: 0.966
+weight_decay: 0.004
+stepsize: 5000
+snapshot: 1000
+snapshot_prefix: "temp/mlp_simple"
+solver_mode: CPU
+net: "examples/cifar10/cifar10_mlp_train_test_5layers.prototxt"
+train_state {
+  level: 0
+  stage: ""
+}
+snapshot_format: HDF5
+type: "SGD"
+I0415 15:33:24.378095     1 solver.cpp:87] Creating training net from net file: examples/cifar10/cifar10_mlp_train_test_5layers.prototxt
+I0415 15:33:24.382267     1 net.cpp:296] The NetState phase (0) differed from the phase (1) specified by a rule in layer cifar
+I0415 15:33:24.382657     1 net.cpp:53] Initializing net from parameters: 
+name: "CIFAR10_mlp"
+state {
+  phase: TRAIN
+  level: 0
+  stage: ""
+}
+layer {
+  name: "cifar"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mean_file: "examples/cifar10/mean.binaryproto"
+  }
+  data_param {
+    source: "examples/cifar10/cifar10_train_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "ip11"
+  type: "InnerProduct"
+  bottom: "data"
+  top: "ip11"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip11"
+  top: "ip11"
+}
+layer {
+  name: "ip14"
+  type: "InnerProduct"
+  bottom: "ip11"
+  top: "ip14"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "ip14"
+  top: "ip14"
+}
+layer {
+  name: "ip15"
+  type: "InnerProduct"
+  bottom: "ip14"
+  top: "ip15"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "ip15"
+  top: "ip15"
+}
+layer {
+  name: "ip16"
+  type: "InnerProduct"
+  bottom: "ip15"
+  top: "ip16"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "ip16"
+  top: "ip16"
+}
+layer {
+  name: "encode1neuron"
+  type: "Sigmoid"
+  bottom: "ip16"
+  top: "encode"
+}
+layer {
+  name: "ip5"
+  type: "InnerProduct"
+  bottom: "encode"
+  top: "ip6"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian"
+      std: 0.1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "ip6"
+  bottom: "label"
+  top: "accuracy"
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip6"
+  bottom: "label"
+  top: "loss"
+}
+I0415 15:33:24.382777     1 layer_factory.hpp:77] Creating layer cifar
+I0415 15:33:24.421656     1 db_lmdb.cpp:35] Opened lmdb examples/cifar10/cifar10_train_lmdb
+I0415 15:33:24.423499     1 net.cpp:86] Creating Layer cifar
+I0415 15:33:24.423594     1 net.cpp:382] cifar -> data
+I0415 15:33:24.423638     1 net.cpp:382] cifar -> label
+I0415 15:33:24.423707     1 data_transformer.cpp:25] Loading mean file from: examples/cifar10/mean.binaryproto
+I0415 15:33:24.426343     1 data_layer.cpp:45] output data size: 100,3,32,32
+I0415 15:33:24.426887     1 net.cpp:124] Setting up cifar
+I0415 15:33:24.426910     1 net.cpp:131] Top shape: 100 3 32 32 (307200)
+I0415 15:33:24.426944     1 net.cpp:131] Top shape: 100 (100)
+I0415 15:33:24.426949     1 net.cpp:139] Memory required for data: 1229200
+I0415 15:33:24.427003     1 layer_factory.hpp:77] Creating layer label_cifar_1_split
+I0415 15:33:24.427024     1 net.cpp:86] Creating Layer label_cifar_1_split
+I0415 15:33:24.427036     1 net.cpp:408] label_cifar_1_split <- label
+I0415 15:33:24.427052     1 net.cpp:382] label_cifar_1_split -> label_cifar_1_split_0
+I0415 15:33:24.427065     1 net.cpp:382] label_cifar_1_split -> label_cifar_1_split_1
+I0415 15:33:24.427078     1 net.cpp:124] Setting up label_cifar_1_split
+I0415 15:33:24.427124     1 net.cpp:131] Top shape: 100 (100)
+I0415 15:33:24.427131     1 net.cpp:131] Top shape: 100 (100)
+I0415 15:33:24.427137     1 net.cpp:139] Memory required for data: 1230000
+I0415 15:33:24.427145     1 layer_factory.hpp:77] Creating layer ip11
+I0415 15:33:24.427158     1 net.cpp:86] Creating Layer ip11
+I0415 15:33:24.427165     1 net.cpp:408] ip11 <- data
+I0415 15:33:24.427172     1 net.cpp:382] ip11 -> ip11
+I0415 15:33:24.444785     1 net.cpp:124] Setting up ip11
+I0415 15:33:24.444875     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.444881     1 net.cpp:139] Memory required for data: 1434800
+I0415 15:33:24.444914     1 layer_factory.hpp:77] Creating layer relu1
+I0415 15:33:24.444928     1 net.cpp:86] Creating Layer relu1
+I0415 15:33:24.444936     1 net.cpp:408] relu1 <- ip11
+I0415 15:33:24.444944     1 net.cpp:369] relu1 -> ip11 (in-place)
+I0415 15:33:24.444957     1 net.cpp:124] Setting up relu1
+I0415 15:33:24.445034     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.445044     1 net.cpp:139] Memory required for data: 1639600
+I0415 15:33:24.445050     1 layer_factory.hpp:77] Creating layer ip14
+I0415 15:33:24.445062     1 net.cpp:86] Creating Layer ip14
+I0415 15:33:24.445068     1 net.cpp:408] ip14 <- ip11
+I0415 15:33:24.445077     1 net.cpp:382] ip14 -> ip14
+I0415 15:33:24.449075     1 net.cpp:124] Setting up ip14
+I0415 15:33:24.449180     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.449195     1 net.cpp:139] Memory required for data: 1844400
+I0415 15:33:24.449221     1 layer_factory.hpp:77] Creating layer relu4
+I0415 15:33:24.449300     1 net.cpp:86] Creating Layer relu4
+I0415 15:33:24.449316     1 net.cpp:408] relu4 <- ip14
+I0415 15:33:24.449333     1 net.cpp:369] relu4 -> ip14 (in-place)
+I0415 15:33:24.449352     1 net.cpp:124] Setting up relu4
+I0415 15:33:24.449363     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.449371     1 net.cpp:139] Memory required for data: 2049200
+I0415 15:33:24.449453     1 layer_factory.hpp:77] Creating layer ip15
+I0415 15:33:24.449473     1 net.cpp:86] Creating Layer ip15
+I0415 15:33:24.449529     1 net.cpp:408] ip15 <- ip14
+I0415 15:33:24.449548     1 net.cpp:382] ip15 -> ip15
+I0415 15:33:24.452888     1 net.cpp:124] Setting up ip15
+I0415 15:33:24.452950     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.452962     1 net.cpp:139] Memory required for data: 2254000
+I0415 15:33:24.452988     1 layer_factory.hpp:77] Creating layer relu5
+I0415 15:33:24.453029     1 net.cpp:86] Creating Layer relu5
+I0415 15:33:24.453043     1 net.cpp:408] relu5 <- ip15
+I0415 15:33:24.453059     1 net.cpp:369] relu5 -> ip15 (in-place)
+I0415 15:33:24.453078     1 net.cpp:124] Setting up relu5
+I0415 15:33:24.453088     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.453097     1 net.cpp:139] Memory required for data: 2458800
+I0415 15:33:24.453109     1 layer_factory.hpp:77] Creating layer ip16
+I0415 15:33:24.453127     1 net.cpp:86] Creating Layer ip16
+I0415 15:33:24.453158     1 net.cpp:408] ip16 <- ip15
+I0415 15:33:24.453176     1 net.cpp:382] ip16 -> ip16
+I0415 15:33:24.455610     1 net.cpp:124] Setting up ip16
+I0415 15:33:24.455682     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.455689     1 net.cpp:139] Memory required for data: 2663600
+I0415 15:33:24.455703     1 layer_factory.hpp:77] Creating layer relu6
+I0415 15:33:24.455715     1 net.cpp:86] Creating Layer relu6
+I0415 15:33:24.455739     1 net.cpp:408] relu6 <- ip16
+I0415 15:33:24.455801     1 net.cpp:369] relu6 -> ip16 (in-place)
+I0415 15:33:24.455819     1 net.cpp:124] Setting up relu6
+I0415 15:33:24.455842     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.455849     1 net.cpp:139] Memory required for data: 2868400
+I0415 15:33:24.455857     1 layer_factory.hpp:77] Creating layer encode1neuron
+I0415 15:33:24.455880     1 net.cpp:86] Creating Layer encode1neuron
+I0415 15:33:24.455889     1 net.cpp:408] encode1neuron <- ip16
+I0415 15:33:24.455899     1 net.cpp:382] encode1neuron -> encode
+I0415 15:33:24.455938     1 net.cpp:124] Setting up encode1neuron
+I0415 15:33:24.455953     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.455960     1 net.cpp:139] Memory required for data: 3073200
+I0415 15:33:24.455981     1 layer_factory.hpp:77] Creating layer ip5
+I0415 15:33:24.455996     1 net.cpp:86] Creating Layer ip5
+I0415 15:33:24.456017     1 net.cpp:408] ip5 <- encode
+I0415 15:33:24.456032     1 net.cpp:382] ip5 -> ip6
+I0415 15:33:24.460256     1 net.cpp:124] Setting up ip5
+I0415 15:33:24.460319     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.460325     1 net.cpp:139] Memory required for data: 3278000
+I0415 15:33:24.460350     1 layer_factory.hpp:77] Creating layer ip6_ip5_0_split
+I0415 15:33:24.460371     1 net.cpp:86] Creating Layer ip6_ip5_0_split
+I0415 15:33:24.460403     1 net.cpp:408] ip6_ip5_0_split <- ip6
+I0415 15:33:24.460427     1 net.cpp:382] ip6_ip5_0_split -> ip6_ip5_0_split_0
+I0415 15:33:24.460469     1 net.cpp:382] ip6_ip5_0_split -> ip6_ip5_0_split_1
+I0415 15:33:24.460489     1 net.cpp:124] Setting up ip6_ip5_0_split
+I0415 15:33:24.460505     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.460515     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.460525     1 net.cpp:139] Memory required for data: 3687600
+I0415 15:33:24.460533     1 layer_factory.hpp:77] Creating layer accuracy
+I0415 15:33:24.460546     1 net.cpp:86] Creating Layer accuracy
+I0415 15:33:24.460556     1 net.cpp:408] accuracy <- ip6_ip5_0_split_0
+I0415 15:33:24.460566     1 net.cpp:408] accuracy <- label_cifar_1_split_0
+I0415 15:33:24.460676     1 net.cpp:382] accuracy -> accuracy
+I0415 15:33:24.460706     1 net.cpp:124] Setting up accuracy
+I0415 15:33:24.460773     1 net.cpp:131] Top shape: (1)
+I0415 15:33:24.460824     1 net.cpp:139] Memory required for data: 3687604
+I0415 15:33:24.460839     1 layer_factory.hpp:77] Creating layer loss
+I0415 15:33:24.460861     1 net.cpp:86] Creating Layer loss
+I0415 15:33:24.460897     1 net.cpp:408] loss <- ip6_ip5_0_split_1
+I0415 15:33:24.460918     1 net.cpp:408] loss <- label_cifar_1_split_1
+I0415 15:33:24.460994     1 net.cpp:382] loss -> loss
+I0415 15:33:24.461078     1 layer_factory.hpp:77] Creating layer loss
+I0415 15:33:24.461370     1 net.cpp:124] Setting up loss
+I0415 15:33:24.461412     1 net.cpp:131] Top shape: (1)
+I0415 15:33:24.461424     1 net.cpp:134]     with loss weight 1
+I0415 15:33:24.461483     1 net.cpp:139] Memory required for data: 3687608
+I0415 15:33:24.461493     1 net.cpp:200] loss needs backward computation.
+I0415 15:33:24.461522     1 net.cpp:202] accuracy does not need backward computation.
+I0415 15:33:24.461532     1 net.cpp:200] ip6_ip5_0_split needs backward computation.
+I0415 15:33:24.461540     1 net.cpp:200] ip5 needs backward computation.
+I0415 15:33:24.461560     1 net.cpp:200] encode1neuron needs backward computation.
+I0415 15:33:24.461568     1 net.cpp:200] relu6 needs backward computation.
+I0415 15:33:24.461576     1 net.cpp:200] ip16 needs backward computation.
+I0415 15:33:24.461596     1 net.cpp:200] relu5 needs backward computation.
+I0415 15:33:24.461606     1 net.cpp:200] ip15 needs backward computation.
+I0415 15:33:24.461614     1 net.cpp:200] relu4 needs backward computation.
+I0415 15:33:24.461633     1 net.cpp:200] ip14 needs backward computation.
+I0415 15:33:24.461642     1 net.cpp:200] relu1 needs backward computation.
+I0415 15:33:24.461668     1 net.cpp:200] ip11 needs backward computation.
+I0415 15:33:24.461678     1 net.cpp:202] label_cifar_1_split does not need backward computation.
+I0415 15:33:24.461724     1 net.cpp:202] cifar does not need backward computation.
+I0415 15:33:24.461733     1 net.cpp:244] This network produces output accuracy
+I0415 15:33:24.461741     1 net.cpp:244] This network produces output loss
+I0415 15:33:24.461777     1 net.cpp:257] Network initialization done.
+I0415 15:33:24.465517     1 solver.cpp:173] Creating test net (#0) specified by net file: examples/cifar10/cifar10_mlp_train_test_5layers.prototxt
+I0415 15:33:24.465636     1 net.cpp:296] The NetState phase (1) differed from the phase (0) specified by a rule in layer cifar
+I0415 15:33:24.465874     1 net.cpp:53] Initializing net from parameters: 
+name: "CIFAR10_mlp"
+state {
+  phase: TEST
+}
+layer {
+  name: "cifar"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    mean_file: "examples/cifar10/mean.binaryproto"
+  }
+  data_param {
+    source: "examples/cifar10/cifar10_test_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "ip11"
+  type: "InnerProduct"
+  bottom: "data"
+  top: "ip11"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip11"
+  top: "ip11"
+}
+layer {
+  name: "ip14"
+  type: "InnerProduct"
+  bottom: "ip11"
+  top: "ip14"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "ip14"
+  top: "ip14"
+}
+layer {
+  name: "ip15"
+  type: "InnerProduct"
+  bottom: "ip14"
+  top: "ip15"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "ip15"
+  top: "ip15"
+}
+layer {
+  name: "ip16"
+  type: "InnerProduct"
+  bottom: "ip15"
+  top: "ip16"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "ip16"
+  top: "ip16"
+}
+layer {
+  name: "encode1neuron"
+  type: "Sigmoid"
+  bottom: "ip16"
+  top: "encode"
+}
+layer {
+  name: "ip5"
+  type: "InnerProduct"
+  bottom: "encode"
+  top: "ip6"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian"
+      std: 0.1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "ip6"
+  bottom: "label"
+  top: "accuracy"
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip6"
+  bottom: "label"
+  top: "loss"
+}
+I0415 15:33:24.466116     1 layer_factory.hpp:77] Creating layer cifar
+I0415 15:33:24.478380     1 db_lmdb.cpp:35] Opened lmdb examples/cifar10/cifar10_test_lmdb
+I0415 15:33:24.479441     1 net.cpp:86] Creating Layer cifar
+I0415 15:33:24.479502     1 net.cpp:382] cifar -> data
+I0415 15:33:24.479527     1 net.cpp:382] cifar -> label
+I0415 15:33:24.479542     1 data_transformer.cpp:25] Loading mean file from: examples/cifar10/mean.binaryproto
+I0415 15:33:24.482091     1 data_layer.cpp:45] output data size: 100,3,32,32
+I0415 15:33:24.482355     1 net.cpp:124] Setting up cifar
+I0415 15:33:24.482456     1 net.cpp:131] Top shape: 100 3 32 32 (307200)
+I0415 15:33:24.482493     1 net.cpp:131] Top shape: 100 (100)
+I0415 15:33:24.482506     1 net.cpp:139] Memory required for data: 1229200
+I0415 15:33:24.482537     1 layer_factory.hpp:77] Creating layer label_cifar_1_split
+I0415 15:33:24.482565     1 net.cpp:86] Creating Layer label_cifar_1_split
+I0415 15:33:24.482599     1 net.cpp:408] label_cifar_1_split <- label
+I0415 15:33:24.482698     1 net.cpp:382] label_cifar_1_split -> label_cifar_1_split_0
+I0415 15:33:24.482826     1 net.cpp:382] label_cifar_1_split -> label_cifar_1_split_1
+I0415 15:33:24.482872     1 net.cpp:124] Setting up label_cifar_1_split
+I0415 15:33:24.482908     1 net.cpp:131] Top shape: 100 (100)
+I0415 15:33:24.482945     1 net.cpp:131] Top shape: 100 (100)
+I0415 15:33:24.482956     1 net.cpp:139] Memory required for data: 1230000
+I0415 15:33:24.482986     1 layer_factory.hpp:77] Creating layer ip11
+I0415 15:33:24.483009     1 net.cpp:86] Creating Layer ip11
+I0415 15:33:24.483042     1 net.cpp:408] ip11 <- data
+I0415 15:33:24.483063     1 net.cpp:382] ip11 -> ip11
+I0415 15:33:24.502089     1 net.cpp:124] Setting up ip11
+I0415 15:33:24.502176     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.502183     1 net.cpp:139] Memory required for data: 1434800
+I0415 15:33:24.502203     1 layer_factory.hpp:77] Creating layer relu1
+I0415 15:33:24.502215     1 net.cpp:86] Creating Layer relu1
+I0415 15:33:24.502223     1 net.cpp:408] relu1 <- ip11
+I0415 15:33:24.502231     1 net.cpp:369] relu1 -> ip11 (in-place)
+I0415 15:33:24.502243     1 net.cpp:124] Setting up relu1
+I0415 15:33:24.502250     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.502254     1 net.cpp:139] Memory required for data: 1639600
+I0415 15:33:24.502259     1 layer_factory.hpp:77] Creating layer ip14
+I0415 15:33:24.502342     1 net.cpp:86] Creating Layer ip14
+I0415 15:33:24.502367     1 net.cpp:408] ip14 <- ip11
+I0415 15:33:24.502384     1 net.cpp:382] ip14 -> ip14
+I0415 15:33:24.505993     1 net.cpp:124] Setting up ip14
+I0415 15:33:24.506042     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.506052     1 net.cpp:139] Memory required for data: 1844400
+I0415 15:33:24.506139     1 layer_factory.hpp:77] Creating layer relu4
+I0415 15:33:24.506153     1 net.cpp:86] Creating Layer relu4
+I0415 15:33:24.506176     1 net.cpp:408] relu4 <- ip14
+I0415 15:33:24.506243     1 net.cpp:369] relu4 -> ip14 (in-place)
+I0415 15:33:24.506316     1 net.cpp:124] Setting up relu4
+I0415 15:33:24.506402     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.506409     1 net.cpp:139] Memory required for data: 2049200
+I0415 15:33:24.506414     1 layer_factory.hpp:77] Creating layer ip15
+I0415 15:33:24.506424     1 net.cpp:86] Creating Layer ip15
+I0415 15:33:24.506430     1 net.cpp:408] ip15 <- ip14
+I0415 15:33:24.506439     1 net.cpp:382] ip15 -> ip15
+I0415 15:33:24.509094     1 net.cpp:124] Setting up ip15
+I0415 15:33:24.509133     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.509140     1 net.cpp:139] Memory required for data: 2254000
+I0415 15:33:24.509153     1 layer_factory.hpp:77] Creating layer relu5
+I0415 15:33:24.509238     1 net.cpp:86] Creating Layer relu5
+I0415 15:33:24.509256     1 net.cpp:408] relu5 <- ip15
+I0415 15:33:24.509269     1 net.cpp:369] relu5 -> ip15 (in-place)
+I0415 15:33:24.509281     1 net.cpp:124] Setting up relu5
+I0415 15:33:24.509295     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.509320     1 net.cpp:139] Memory required for data: 2458800
+I0415 15:33:24.509330     1 layer_factory.hpp:77] Creating layer ip16
+I0415 15:33:24.509346     1 net.cpp:86] Creating Layer ip16
+I0415 15:33:24.509357     1 net.cpp:408] ip16 <- ip15
+I0415 15:33:24.509405     1 net.cpp:382] ip16 -> ip16
+I0415 15:33:24.511593     1 net.cpp:124] Setting up ip16
+I0415 15:33:24.511632     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.511638     1 net.cpp:139] Memory required for data: 2663600
+I0415 15:33:24.511649     1 layer_factory.hpp:77] Creating layer relu6
+I0415 15:33:24.511673     1 net.cpp:86] Creating Layer relu6
+I0415 15:33:24.511683     1 net.cpp:408] relu6 <- ip16
+I0415 15:33:24.511711     1 net.cpp:369] relu6 -> ip16 (in-place)
+I0415 15:33:24.511739     1 net.cpp:124] Setting up relu6
+I0415 15:33:24.511749     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.511768     1 net.cpp:139] Memory required for data: 2868400
+I0415 15:33:24.511776     1 layer_factory.hpp:77] Creating layer encode1neuron
+I0415 15:33:24.511785     1 net.cpp:86] Creating Layer encode1neuron
+I0415 15:33:24.511816     1 net.cpp:408] encode1neuron <- ip16
+I0415 15:33:24.511826     1 net.cpp:382] encode1neuron -> encode
+I0415 15:33:24.511844     1 net.cpp:124] Setting up encode1neuron
+I0415 15:33:24.512012     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.512049     1 net.cpp:139] Memory required for data: 3073200
+I0415 15:33:24.512063     1 layer_factory.hpp:77] Creating layer ip5
+I0415 15:33:24.512075     1 net.cpp:86] Creating Layer ip5
+I0415 15:33:24.512086     1 net.cpp:408] ip5 <- encode
+I0415 15:33:24.512121     1 net.cpp:382] ip5 -> ip6
+I0415 15:33:24.515589     1 net.cpp:124] Setting up ip5
+I0415 15:33:24.515635     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.515645     1 net.cpp:139] Memory required for data: 3278000
+I0415 15:33:24.515672     1 layer_factory.hpp:77] Creating layer ip6_ip5_0_split
+I0415 15:33:24.515717     1 net.cpp:86] Creating Layer ip6_ip5_0_split
+I0415 15:33:24.515729     1 net.cpp:408] ip6_ip5_0_split <- ip6
+I0415 15:33:24.515765     1 net.cpp:382] ip6_ip5_0_split -> ip6_ip5_0_split_0
+I0415 15:33:24.515805     1 net.cpp:382] ip6_ip5_0_split -> ip6_ip5_0_split_1
+I0415 15:33:24.515825     1 net.cpp:124] Setting up ip6_ip5_0_split
+I0415 15:33:24.515838     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.515849     1 net.cpp:131] Top shape: 100 512 (51200)
+I0415 15:33:24.515857     1 net.cpp:139] Memory required for data: 3687600
+I0415 15:33:24.515878     1 layer_factory.hpp:77] Creating layer accuracy
+I0415 15:33:24.515944     1 net.cpp:86] Creating Layer accuracy
+I0415 15:33:24.516033     1 net.cpp:408] accuracy <- ip6_ip5_0_split_0
+I0415 15:33:24.516094     1 net.cpp:408] accuracy <- label_cifar_1_split_0
+I0415 15:33:24.516232     1 net.cpp:382] accuracy -> accuracy
+I0415 15:33:24.516271     1 net.cpp:124] Setting up accuracy
+I0415 15:33:24.516284     1 net.cpp:131] Top shape: (1)
+I0415 15:33:24.516289     1 net.cpp:139] Memory required for data: 3687604
+I0415 15:33:24.516294     1 layer_factory.hpp:77] Creating layer loss
+I0415 15:33:24.516304     1 net.cpp:86] Creating Layer loss
+I0415 15:33:24.516324     1 net.cpp:408] loss <- ip6_ip5_0_split_1
+I0415 15:33:24.516335     1 net.cpp:408] loss <- label_cifar_1_split_1
+I0415 15:33:24.516360     1 net.cpp:382] loss -> loss
+I0415 15:33:24.516374     1 layer_factory.hpp:77] Creating layer loss
+I0415 15:33:24.516489     1 net.cpp:124] Setting up loss
+I0415 15:33:24.516516     1 net.cpp:131] Top shape: (1)
+I0415 15:33:24.516525     1 net.cpp:134]     with loss weight 1
+I0415 15:33:24.516554     1 net.cpp:139] Memory required for data: 3687608
+I0415 15:33:24.516562     1 net.cpp:200] loss needs backward computation.
+I0415 15:33:24.516571     1 net.cpp:202] accuracy does not need backward computation.
+I0415 15:33:24.516592     1 net.cpp:200] ip6_ip5_0_split needs backward computation.
+I0415 15:33:24.516600     1 net.cpp:200] ip5 needs backward computation.
+I0415 15:33:24.516621     1 net.cpp:200] encode1neuron needs backward computation.
+I0415 15:33:24.516630     1 net.cpp:200] relu6 needs backward computation.
+I0415 15:33:24.516650     1 net.cpp:200] ip16 needs backward computation.
+I0415 15:33:24.516659     1 net.cpp:200] relu5 needs backward computation.
+I0415 15:33:24.516680     1 net.cpp:200] ip15 needs backward computation.
+I0415 15:33:24.516687     1 net.cpp:200] relu4 needs backward computation.
+I0415 15:33:24.516708     1 net.cpp:200] ip14 needs backward computation.
+I0415 15:33:24.516716     1 net.cpp:200] relu1 needs backward computation.
+I0415 15:33:24.516736     1 net.cpp:200] ip11 needs backward computation.
+I0415 15:33:24.516751     1 net.cpp:202] label_cifar_1_split does not need backward computation.
+I0415 15:33:24.516785     1 net.cpp:202] cifar does not need backward computation.
+I0415 15:33:24.516808     1 net.cpp:244] This network produces output accuracy
+I0415 15:33:24.516815     1 net.cpp:244] This network produces output loss
+I0415 15:33:24.516832     1 net.cpp:257] Network initialization done.
+I0415 15:33:24.516913     1 solver.cpp:56] Solver scaffolding done.
+I0415 15:33:24.516968     1 caffe.cpp:248] Starting Optimization
+I0415 15:33:24.517010     1 solver.cpp:273] Solving CIFAR10_mlp
+I0415 15:33:24.517019     1 solver.cpp:274] Learning Rate Policy: step
+I0415 15:33:24.520357     1 solver.cpp:331] Iteration 0, Testing net (#0)
+I0415 15:33:28.635651     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:33:28.812341     1 solver.cpp:398]     Test net output #0: accuracy = 0
+I0415 15:33:28.812427     1 solver.cpp:398]     Test net output #1: loss = 8.20438 (* 1 = 8.20438 loss)
+I0415 15:33:28.906239     1 solver.cpp:219] Iteration 0 (0 iter/s, 4.389s/1000 iters), loss = 8.11989
+I0415 15:33:28.906332     1 solver.cpp:238]     Train net output #0: accuracy = 0
+I0415 15:33:28.906358     1 solver.cpp:238]     Train net output #1: loss = 8.11989 (* 1 = 8.11989 loss)
+I0415 15:33:28.906390     1 sgd_solver.cpp:105] Iteration 0, lr = 0.0001
+I0415 15:34:19.025485     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:35:07.438920     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:35:07.824851     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_1000.caffemodel.h5
+I0415 15:35:07.905370     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_1000.solverstate.h5
+I0415 15:35:07.985540     1 solver.cpp:331] Iteration 1000, Testing net (#0)
+I0415 15:35:11.769934     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:35:11.924784     1 solver.cpp:398]     Test net output #0: accuracy = 0.3796
+I0415 15:35:11.924865     1 solver.cpp:398]     Test net output #1: loss = 1.75999 (* 1 = 1.75999 loss)
+I0415 15:35:12.006970     1 solver.cpp:219] Iteration 1000 (9.69932 iter/s, 103.1s/1000 iters), loss = 1.86121
+I0415 15:35:12.007069     1 solver.cpp:238]     Train net output #0: accuracy = 0.29
+I0415 15:35:12.007100     1 solver.cpp:238]     Train net output #1: loss = 1.86121 (* 1 = 1.86121 loss)
+I0415 15:35:12.007122     1 sgd_solver.cpp:105] Iteration 1000, lr = 0.0001
+I0415 15:35:59.796932     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:36:49.343168     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:36:49.817729     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_2000.caffemodel.h5
+I0415 15:36:49.960093     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_2000.solverstate.h5
+I0415 15:36:50.098170     1 solver.cpp:331] Iteration 2000, Testing net (#0)
+I0415 15:36:54.391918     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:36:54.552934     1 solver.cpp:398]     Test net output #0: accuracy = 0.4258
+I0415 15:36:54.553017     1 solver.cpp:398]     Test net output #1: loss = 1.63594 (* 1 = 1.63594 loss)
+I0415 15:36:54.641234     1 solver.cpp:219] Iteration 2000 (9.74336 iter/s, 102.634s/1000 iters), loss = 1.6752
+I0415 15:36:54.641335     1 solver.cpp:238]     Train net output #0: accuracy = 0.36
+I0415 15:36:54.641352     1 solver.cpp:238]     Train net output #1: loss = 1.6752 (* 1 = 1.6752 loss)
+I0415 15:36:54.641365     1 sgd_solver.cpp:105] Iteration 2000, lr = 0.0001
+I0415 15:37:47.855890     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:38:41.024247     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:38:41.449566     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_3000.caffemodel.h5
+I0415 15:38:41.533870     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_3000.solverstate.h5
+I0415 15:38:41.623610     1 solver.cpp:331] Iteration 3000, Testing net (#0)
+I0415 15:38:45.549834     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:38:45.710008     1 solver.cpp:398]     Test net output #0: accuracy = 0.4509
+I0415 15:38:45.710119     1 solver.cpp:398]     Test net output #1: loss = 1.56528 (* 1 = 1.56528 loss)
+I0415 15:38:45.794201     1 solver.cpp:219] Iteration 3000 (8.99669 iter/s, 111.152s/1000 iters), loss = 1.57908
+I0415 15:38:45.794701     1 solver.cpp:238]     Train net output #0: accuracy = 0.42
+I0415 15:38:45.794925     1 solver.cpp:238]     Train net output #1: loss = 1.57908 (* 1 = 1.57908 loss)
+I0415 15:38:45.795204     1 sgd_solver.cpp:105] Iteration 3000, lr = 0.0001
+I0415 15:39:34.115963     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:40:22.249145     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:40:22.633117     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_4000.caffemodel.h5
+I0415 15:40:22.711174     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_4000.solverstate.h5
+I0415 15:40:22.793294     1 solver.cpp:331] Iteration 4000, Testing net (#0)
+I0415 15:40:26.502126     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:40:26.665298     1 solver.cpp:398]     Test net output #0: accuracy = 0.464
+I0415 15:40:26.665380     1 solver.cpp:398]     Test net output #1: loss = 1.51454 (* 1 = 1.51454 loss)
+I0415 15:40:26.749521     1 solver.cpp:219] Iteration 4000 (9.9055 iter/s, 100.954s/1000 iters), loss = 1.48544
+I0415 15:40:26.749614     1 solver.cpp:238]     Train net output #0: accuracy = 0.47
+I0415 15:40:26.749631     1 solver.cpp:238]     Train net output #1: loss = 1.48544 (* 1 = 1.48544 loss)
+I0415 15:40:26.749644     1 sgd_solver.cpp:105] Iteration 4000, lr = 0.0001
+I0415 15:41:14.375977     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:42:02.575625     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:42:02.958513     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_5000.caffemodel.h5
+I0415 15:42:03.035540     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_5000.solverstate.h5
+I0415 15:42:03.120734     1 solver.cpp:331] Iteration 5000, Testing net (#0)
+I0415 15:42:06.890185     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:42:07.051069     1 solver.cpp:398]     Test net output #0: accuracy = 0.4753
+I0415 15:42:07.051156     1 solver.cpp:398]     Test net output #1: loss = 1.47808 (* 1 = 1.47808 loss)
+I0415 15:42:07.135859     1 solver.cpp:219] Iteration 5000 (9.96155 iter/s, 100.386s/1000 iters), loss = 1.39913
+I0415 15:42:07.136112     1 solver.cpp:238]     Train net output #0: accuracy = 0.47
+I0415 15:42:07.136467     1 solver.cpp:238]     Train net output #1: loss = 1.39913 (* 1 = 1.39913 loss)
+I0415 15:42:07.136610     1 sgd_solver.cpp:105] Iteration 5000, lr = 1e-05
+I0415 15:42:56.361515     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:43:44.701130     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:43:45.084941     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_6000.caffemodel.h5
+I0415 15:43:45.169961     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_6000.solverstate.h5
+I0415 15:43:45.261603     1 solver.cpp:331] Iteration 6000, Testing net (#0)
+I0415 15:43:49.053642     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:43:49.212419     1 solver.cpp:398]     Test net output #0: accuracy = 0.4809
+I0415 15:43:49.212509     1 solver.cpp:398]     Test net output #1: loss = 1.46328 (* 1 = 1.46328 loss)
+I0415 15:43:49.298631     1 solver.cpp:219] Iteration 6000 (9.78837 iter/s, 102.162s/1000 iters), loss = 1.36283
+I0415 15:43:49.298717     1 solver.cpp:238]     Train net output #0: accuracy = 0.52
+I0415 15:43:49.298734     1 solver.cpp:238]     Train net output #1: loss = 1.36283 (* 1 = 1.36283 loss)
+I0415 15:43:49.298745     1 sgd_solver.cpp:105] Iteration 6000, lr = 1e-05
+I0415 15:44:37.082600     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:45:25.532313     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:45:25.911676     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_7000.caffemodel.h5
+I0415 15:45:26.009435     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_7000.solverstate.h5
+I0415 15:45:26.093821     1 solver.cpp:331] Iteration 7000, Testing net (#0)
+I0415 15:45:29.873976     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:45:30.033942     1 solver.cpp:398]     Test net output #0: accuracy = 0.4817
+I0415 15:45:30.034024     1 solver.cpp:398]     Test net output #1: loss = 1.45947 (* 1 = 1.45947 loss)
+I0415 15:45:30.123564     1 solver.cpp:219] Iteration 7000 (9.91827 iter/s, 100.824s/1000 iters), loss = 1.34284
+I0415 15:45:30.123661     1 solver.cpp:238]     Train net output #0: accuracy = 0.53
+I0415 15:45:30.123677     1 solver.cpp:238]     Train net output #1: loss = 1.34284 (* 1 = 1.34284 loss)
+I0415 15:45:30.123688     1 sgd_solver.cpp:105] Iteration 7000, lr = 1e-05
+I0415 15:46:20.387651     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:47:08.650902     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:47:09.035085     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_8000.caffemodel.h5
+I0415 15:47:09.113473     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_8000.solverstate.h5
+I0415 15:47:09.206972     1 solver.cpp:331] Iteration 8000, Testing net (#0)
+I0415 15:47:12.926151     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:47:13.084743     1 solver.cpp:398]     Test net output #0: accuracy = 0.485
+I0415 15:47:13.084825     1 solver.cpp:398]     Test net output #1: loss = 1.45642 (* 1 = 1.45642 loss)
+I0415 15:47:13.170158     1 solver.cpp:219] Iteration 8000 (9.7044 iter/s, 103.046s/1000 iters), loss = 1.32956
+I0415 15:47:13.170254     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 15:47:13.170272     1 solver.cpp:238]     Train net output #1: loss = 1.32956 (* 1 = 1.32956 loss)
+I0415 15:47:13.170284     1 sgd_solver.cpp:105] Iteration 8000, lr = 1e-05
+I0415 15:48:01.995070     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:48:50.160886     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:48:50.546293     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_9000.caffemodel.h5
+I0415 15:48:50.629549     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_9000.solverstate.h5
+I0415 15:48:50.711716     1 solver.cpp:331] Iteration 9000, Testing net (#0)
+I0415 15:48:54.475467     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:48:54.628896     1 solver.cpp:398]     Test net output #0: accuracy = 0.4853
+I0415 15:48:54.628973     1 solver.cpp:398]     Test net output #1: loss = 1.45428 (* 1 = 1.45428 loss)
+I0415 15:48:54.715214     1 solver.cpp:219] Iteration 9000 (9.84795 iter/s, 101.544s/1000 iters), loss = 1.31759
+I0415 15:48:54.715301     1 solver.cpp:238]     Train net output #0: accuracy = 0.54
+I0415 15:48:54.715317     1 solver.cpp:238]     Train net output #1: loss = 1.31759 (* 1 = 1.31759 loss)
+I0415 15:48:54.715329     1 sgd_solver.cpp:105] Iteration 9000, lr = 1e-05
+I0415 15:49:42.682432     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:50:30.730240     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:50:31.109529     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_10000.caffemodel.h5
+I0415 15:50:31.190207     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_10000.solverstate.h5
+I0415 15:50:31.275588     1 solver.cpp:331] Iteration 10000, Testing net (#0)
+I0415 15:50:35.048714     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:50:35.208282     1 solver.cpp:398]     Test net output #0: accuracy = 0.4863
+I0415 15:50:35.208362     1 solver.cpp:398]     Test net output #1: loss = 1.45204 (* 1 = 1.45204 loss)
+I0415 15:50:35.288602     1 solver.cpp:219] Iteration 10000 (9.94303 iter/s, 100.573s/1000 iters), loss = 1.30724
+I0415 15:50:35.288836     1 solver.cpp:238]     Train net output #0: accuracy = 0.54
+I0415 15:50:35.289073     1 solver.cpp:238]     Train net output #1: loss = 1.30724 (* 1 = 1.30724 loss)
+I0415 15:50:35.289212     1 sgd_solver.cpp:105] Iteration 10000, lr = 1e-06
+I0415 15:51:23.092937     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:52:13.637141     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:52:14.024628     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_11000.caffemodel.h5
+I0415 15:52:14.108109     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_11000.solverstate.h5
+I0415 15:52:14.192150     1 solver.cpp:331] Iteration 11000, Testing net (#0)
+I0415 15:52:17.986497     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:52:18.145689     1 solver.cpp:398]     Test net output #0: accuracy = 0.4876
+I0415 15:52:18.145771     1 solver.cpp:398]     Test net output #1: loss = 1.45062 (* 1 = 1.45062 loss)
+I0415 15:52:18.232671     1 solver.cpp:219] Iteration 11000 (9.71411 iter/s, 102.943s/1000 iters), loss = 1.30459
+I0415 15:52:18.232767     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 15:52:18.232784     1 solver.cpp:238]     Train net output #1: loss = 1.30459 (* 1 = 1.30459 loss)
+I0415 15:52:18.232795     1 sgd_solver.cpp:105] Iteration 11000, lr = 1e-06
+I0415 15:53:07.184870     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:53:58.290024     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:53:58.714962     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_12000.caffemodel.h5
+I0415 15:53:58.796676     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_12000.solverstate.h5
+I0415 15:53:58.891306     1 solver.cpp:331] Iteration 12000, Testing net (#0)
+I0415 15:54:02.887575     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:54:03.049667     1 solver.cpp:398]     Test net output #0: accuracy = 0.4881
+I0415 15:54:03.049777     1 solver.cpp:398]     Test net output #1: loss = 1.45031 (* 1 = 1.45031 loss)
+I0415 15:54:03.136768     1 solver.cpp:219] Iteration 12000 (9.53262 iter/s, 104.903s/1000 iters), loss = 1.30262
+I0415 15:54:03.136860     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 15:54:03.136878     1 solver.cpp:238]     Train net output #1: loss = 1.30262 (* 1 = 1.30262 loss)
+I0415 15:54:03.136889     1 sgd_solver.cpp:105] Iteration 12000, lr = 1e-06
+I0415 15:54:54.453997     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:55:46.552608     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:55:47.007926     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_13000.caffemodel.h5
+I0415 15:55:47.164456     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_13000.solverstate.h5
+I0415 15:55:47.282487     1 solver.cpp:331] Iteration 13000, Testing net (#0)
+I0415 15:55:51.725877     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:55:51.900702     1 solver.cpp:398]     Test net output #0: accuracy = 0.4873
+I0415 15:55:51.900804     1 solver.cpp:398]     Test net output #1: loss = 1.45006 (* 1 = 1.45006 loss)
+I0415 15:55:52.008615     1 solver.cpp:219] Iteration 13000 (9.18518 iter/s, 108.871s/1000 iters), loss = 1.30109
+I0415 15:55:52.008705     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 15:55:52.008802     1 solver.cpp:238]     Train net output #1: loss = 1.30109 (* 1 = 1.30109 loss)
+I0415 15:55:52.009050     1 sgd_solver.cpp:105] Iteration 13000, lr = 1e-06
+I0415 15:56:44.095232     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:57:36.236201     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:57:36.655510     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_14000.caffemodel.h5
+I0415 15:57:36.741885     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_14000.solverstate.h5
+I0415 15:57:36.835376     1 solver.cpp:331] Iteration 14000, Testing net (#0)
+I0415 15:57:40.843485     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:57:41.009531     1 solver.cpp:398]     Test net output #0: accuracy = 0.4874
+I0415 15:57:41.009636     1 solver.cpp:398]     Test net output #1: loss = 1.44983 (* 1 = 1.44983 loss)
+I0415 15:57:41.093842     1 solver.cpp:219] Iteration 14000 (9.16716 iter/s, 109.085s/1000 iters), loss = 1.29968
+I0415 15:57:41.093930     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 15:57:41.093946     1 solver.cpp:238]     Train net output #1: loss = 1.29968 (* 1 = 1.29968 loss)
+I0415 15:57:41.093958     1 sgd_solver.cpp:105] Iteration 14000, lr = 1e-06
+I0415 15:58:32.836865     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:59:24.775878     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:59:25.225738     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_15000.caffemodel.h5
+I0415 15:59:25.316678     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_15000.solverstate.h5
+I0415 15:59:25.458209     1 solver.cpp:331] Iteration 15000, Testing net (#0)
+I0415 15:59:29.409979     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 15:59:29.570143     1 solver.cpp:398]     Test net output #0: accuracy = 0.4877
+I0415 15:59:29.570225     1 solver.cpp:398]     Test net output #1: loss = 1.44958 (* 1 = 1.44958 loss)
+I0415 15:59:29.654784     1 solver.cpp:219] Iteration 15000 (9.2115 iter/s, 108.56s/1000 iters), loss = 1.29838
+I0415 15:59:29.655174     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 15:59:29.655594     1 solver.cpp:238]     Train net output #1: loss = 1.29838 (* 1 = 1.29838 loss)
+I0415 15:59:29.655848     1 sgd_solver.cpp:105] Iteration 15000, lr = 1e-07
+I0415 16:00:19.651893     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:01:08.533627     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:01:08.928138     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_16000.caffemodel.h5
+I0415 16:01:09.011715     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_16000.solverstate.h5
+I0415 16:01:09.117089     1 solver.cpp:331] Iteration 16000, Testing net (#0)
+I0415 16:01:12.950901     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:01:13.108711     1 solver.cpp:398]     Test net output #0: accuracy = 0.4883
+I0415 16:01:13.108796     1 solver.cpp:398]     Test net output #1: loss = 1.4496 (* 1 = 1.4496 loss)
+I0415 16:01:13.192682     1 solver.cpp:219] Iteration 16000 (9.65838 iter/s, 103.537s/1000 iters), loss = 1.29869
+I0415 16:01:13.192780     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:01:13.192797     1 solver.cpp:238]     Train net output #1: loss = 1.29869 (* 1 = 1.29869 loss)
+I0415 16:01:13.192809     1 sgd_solver.cpp:105] Iteration 16000, lr = 1e-07
+I0415 16:02:02.182477     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:02:52.072892     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:02:52.465955     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_17000.caffemodel.h5
+I0415 16:02:52.561755     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_17000.solverstate.h5
+I0415 16:02:52.660897     1 solver.cpp:331] Iteration 17000, Testing net (#0)
+I0415 16:02:56.508867     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:02:56.668200     1 solver.cpp:398]     Test net output #0: accuracy = 0.4883
+I0415 16:02:56.668354     1 solver.cpp:398]     Test net output #1: loss = 1.44957 (* 1 = 1.44957 loss)
+I0415 16:02:56.758604     1 solver.cpp:219] Iteration 17000 (9.65577 iter/s, 103.565s/1000 iters), loss = 1.29876
+I0415 16:02:56.758769     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:02:56.758797     1 solver.cpp:238]     Train net output #1: loss = 1.29876 (* 1 = 1.29876 loss)
+I0415 16:02:56.758819     1 sgd_solver.cpp:105] Iteration 17000, lr = 1e-07
+I0415 16:03:45.851382     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:04:34.742444     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:04:35.132320     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_18000.caffemodel.h5
+I0415 16:04:35.215145     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_18000.solverstate.h5
+I0415 16:04:35.300837     1 solver.cpp:331] Iteration 18000, Testing net (#0)
+I0415 16:04:39.144026     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:04:39.305002     1 solver.cpp:398]     Test net output #0: accuracy = 0.4883
+I0415 16:04:39.305138     1 solver.cpp:398]     Test net output #1: loss = 1.44954 (* 1 = 1.44954 loss)
+I0415 16:04:39.387825     1 solver.cpp:219] Iteration 18000 (9.74383 iter/s, 102.629s/1000 iters), loss = 1.2987
+I0415 16:04:39.387979     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:04:39.388008     1 solver.cpp:238]     Train net output #1: loss = 1.2987 (* 1 = 1.2987 loss)
+I0415 16:04:39.388031     1 sgd_solver.cpp:105] Iteration 18000, lr = 1e-07
+I0415 16:05:29.329334     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:06:18.159440     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:06:18.551887     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_19000.caffemodel.h5
+I0415 16:06:18.632063     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_19000.solverstate.h5
+I0415 16:06:18.726048     1 solver.cpp:331] Iteration 19000, Testing net (#0)
+I0415 16:06:22.533529     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:06:22.700706     1 solver.cpp:398]     Test net output #0: accuracy = 0.4881
+I0415 16:06:22.700865     1 solver.cpp:398]     Test net output #1: loss = 1.44951 (* 1 = 1.44951 loss)
+I0415 16:06:22.785902     1 solver.cpp:219] Iteration 19000 (9.67146 iter/s, 103.397s/1000 iters), loss = 1.2986
+I0415 16:06:22.786048     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:06:22.786084     1 solver.cpp:238]     Train net output #1: loss = 1.2986 (* 1 = 1.2986 loss)
+I0415 16:06:22.786106     1 sgd_solver.cpp:105] Iteration 19000, lr = 1e-07
+I0415 16:07:11.279263     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:08:01.557508     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:08:01.947196     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_20000.caffemodel.h5
+I0415 16:08:02.028007     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_20000.solverstate.h5
+I0415 16:08:02.116497     1 solver.cpp:331] Iteration 20000, Testing net (#0)
+I0415 16:08:05.950422     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:08:06.111116     1 solver.cpp:398]     Test net output #0: accuracy = 0.4882
+I0415 16:08:06.111249     1 solver.cpp:398]     Test net output #1: loss = 1.44948 (* 1 = 1.44948 loss)
+I0415 16:08:06.198941     1 solver.cpp:219] Iteration 20000 (9.67006 iter/s, 103.412s/1000 iters), loss = 1.29848
+I0415 16:08:06.199108     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:08:06.199146     1 solver.cpp:238]     Train net output #1: loss = 1.29848 (* 1 = 1.29848 loss)
+I0415 16:08:06.199594     1 sgd_solver.cpp:105] Iteration 20000, lr = 1e-08
+I0415 16:08:55.925272     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:09:45.255722     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:09:45.637812     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_21000.caffemodel.h5
+I0415 16:09:45.719543     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_21000.solverstate.h5
+I0415 16:09:45.805526     1 solver.cpp:331] Iteration 21000, Testing net (#0)
+I0415 16:09:49.716153     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:09:49.872058     1 solver.cpp:398]     Test net output #0: accuracy = 0.4881
+I0415 16:09:49.872144     1 solver.cpp:398]     Test net output #1: loss = 1.44949 (* 1 = 1.44949 loss)
+I0415 16:09:49.953207     1 solver.cpp:219] Iteration 21000 (9.63818 iter/s, 103.754s/1000 iters), loss = 1.29846
+I0415 16:09:49.953284     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:09:49.953300     1 solver.cpp:238]     Train net output #1: loss = 1.29846 (* 1 = 1.29846 loss)
+I0415 16:09:49.953313     1 sgd_solver.cpp:105] Iteration 21000, lr = 1e-08
+I0415 16:10:38.157464     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:11:29.348922     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:11:29.836462     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_22000.caffemodel.h5
+I0415 16:11:29.920392     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_22000.solverstate.h5
+I0415 16:11:30.022701     1 solver.cpp:331] Iteration 22000, Testing net (#0)
+I0415 16:11:33.954924     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:11:34.115324     1 solver.cpp:398]     Test net output #0: accuracy = 0.4881
+I0415 16:11:34.115867     1 solver.cpp:398]     Test net output #1: loss = 1.44948 (* 1 = 1.44948 loss)
+I0415 16:11:34.200145     1 solver.cpp:219] Iteration 22000 (9.59269 iter/s, 104.246s/1000 iters), loss = 1.29846
+I0415 16:11:34.200605     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:11:34.201227     1 solver.cpp:238]     Train net output #1: loss = 1.29846 (* 1 = 1.29846 loss)
+I0415 16:11:34.201294     1 sgd_solver.cpp:105] Iteration 22000, lr = 1e-08
+I0415 16:12:23.162976     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:13:13.183001     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:13:13.581377     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_23000.caffemodel.h5
+I0415 16:13:13.663936     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_23000.solverstate.h5
+I0415 16:13:13.763013     1 solver.cpp:331] Iteration 23000, Testing net (#0)
+I0415 16:13:17.625576     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:13:17.791329     1 solver.cpp:398]     Test net output #0: accuracy = 0.4881
+I0415 16:13:17.791929     1 solver.cpp:398]     Test net output #1: loss = 1.44948 (* 1 = 1.44948 loss)
+I0415 16:13:17.880224     1 solver.cpp:219] Iteration 23000 (9.64515 iter/s, 103.679s/1000 iters), loss = 1.29846
+I0415 16:13:17.880677     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:13:17.881427     1 solver.cpp:238]     Train net output #1: loss = 1.29846 (* 1 = 1.29846 loss)
+I0415 16:13:17.881845     1 sgd_solver.cpp:105] Iteration 23000, lr = 1e-08
+I0415 16:14:06.858798     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:15:00.646497     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:15:01.063949     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_24000.caffemodel.h5
+I0415 16:15:01.152797     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_24000.solverstate.h5
+I0415 16:15:01.243286     1 solver.cpp:331] Iteration 24000, Testing net (#0)
+I0415 16:15:05.249869     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:15:05.410516     1 solver.cpp:398]     Test net output #0: accuracy = 0.4881
+I0415 16:15:05.410985     1 solver.cpp:398]     Test net output #1: loss = 1.44948 (* 1 = 1.44948 loss)
+I0415 16:15:05.496572     1 solver.cpp:219] Iteration 24000 (9.29239 iter/s, 107.615s/1000 iters), loss = 1.29847
+I0415 16:15:05.497092     1 solver.cpp:238]     Train net output #0: accuracy = 0.55
+I0415 16:15:05.497581     1 solver.cpp:238]     Train net output #1: loss = 1.29847 (* 1 = 1.29847 loss)
+I0415 16:15:05.497898     1 sgd_solver.cpp:105] Iteration 24000, lr = 1e-08
+I0415 16:15:58.019306     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:16:47.977180     6 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:16:48.420225     1 solver.cpp:458] Snapshotting to HDF5 file temp/mlp_simple_iter_25000.caffemodel.h5
+I0415 16:16:48.534164     1 sgd_solver.cpp:283] Snapshotting solver state to HDF5 file temp/mlp_simple_iter_25000.solverstate.h5
+I0415 16:16:48.671026     1 solver.cpp:311] Iteration 25000, loss = 1.29847
+I0415 16:16:48.671111     1 solver.cpp:331] Iteration 25000, Testing net (#0)
+I0415 16:16:52.794041     7 data_layer.cpp:73] Restarting data prefetching from start.
+I0415 16:16:52.956421     1 solver.cpp:398]     Test net output #0: accuracy = 0.4881
+I0415 16:16:52.956548     1 solver.cpp:398]     Test net output #1: loss = 1.44948 (* 1 = 1.44948 loss)
+I0415 16:16:52.956559     1 solver.cpp:316] Optimization Done.
+I0415 16:16:52.956567     1 caffe.cpp:259] Optimization Done.
